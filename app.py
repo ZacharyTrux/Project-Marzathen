@@ -1,9 +1,8 @@
 from flask import Flask, render_template
-from flask_ngrok import run_with_ngrok
+
 
 app = Flask(__name__)
-app.config['DEBUG'] = True  # Set debug mode directly
-run_with_ngrok(app)  # This starts ngrok when the app runs
+
 
 # Route for the homepage
 @app.route('/')
