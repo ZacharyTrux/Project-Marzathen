@@ -1,8 +1,6 @@
 from flask import Flask, render_template
 
-
 app = Flask(__name__)
-
 
 # Route for the homepage
 @app.route('/')
@@ -15,4 +13,4 @@ def secret():
     return render_template('secret.html')
 
 if __name__ == '__main__':
-    app.run()  # No need to specify debug=True here, it's set in the config
+    app.run(debug=True)  # Run the app in debug mode
