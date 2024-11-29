@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Basketball Games</title>
-    <p>
-        <a href="/">Go back to the homepage</a>
-    </p>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,8 +50,22 @@
             font-size: 1em;
             color: #666;
         }
-        .game-info span {
+        .score-board {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        .score-board .quarter-scores {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .score-board .total-score {
             font-weight: bold;
+            font-size: 1.3em;
+            margin-top: 10px;
+            color: #4CAF50;
         }
         .no-games {
             text-align: center;
@@ -89,8 +100,16 @@
                         <p>Date: {{ game.date }}</p>
                         <p>Time: {{ game.time }}</p>
                     </div>
+                    <div class="score-board">
+                        <div class="quarter-scores">
+                            <span>{{ game.teams.home.name }} - Q1: {{ game.scores.home.quarter_1 }} | Q2: {{ game.scores.home.quarter_2 }} | Q3: {{ game.scores.home.quarter_3 }} | Q4: {{ game.scores.home.quarter_4 }}</span>
+                            <span>{{ game.teams.away.name }} - Q1: {{ game.scores.away.quarter_1 }} | Q2: {{ game.scores.away.quarter_2 }} | Q3: {{ game.scores.away.quarter_3 }} | Q4: {{ game.scores.away.quarter_4 }}</span>
+                        </div>
+                        <div class="total-score">
+                            <span>Total: {{ game.scores.home.total }} - {{ game.scores.away.total }}</span>
+                        </div>
+                    </div>
                     <div class="game-info">
-                        <span>Score: {{ game.scores.home }} - {{ game.scores.away }}</span><br />
                         <span>Venue: {{ game.venue.name }}</span>
                     </div>
                 </div>
