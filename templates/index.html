@@ -4,6 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <script>
+        function updateTeamOptions() {
+            const sport = document.getElementById("sport").value;
+            const teamSelectWrapper = document.getElementById("teamSelectWrapper");
+            const teamSelect = document.getElementById("teamSelect");
+            teamSelect.innerHTML = ""; // Clear existing options
+
+            if (sport === "football") {
+                // List of football teams
+                const teams = ["Arizona Cardinals", "Atlanta Falcons", "Baltimore Ravens", "Buffalo Bills", "Carolina Panthers", "Chicago Bears", "Cincinnati Bengals", "Cleveland Browns", "Dallas Cowboys", "Denver Broncos", "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Kansas City Chiefs", "Las Vegas Raiders", "Los Angeles Chargers", "Los Angeles Rams", "Miami Dolphins", "Minnesota Vikings", "New England Patriots", "New Orleans Saints", "New York Giants", "New York Jets", "Philadelphia Eagles", "Pittsburgh Steelers", "San Francisco 49ers", "Seattle Seahawks", "Tampa Bay Buccaneers", "Tennessee Titans", "Washington Commanders"
+];
+                teams.forEach(team => {
+                    const option = document.createElement("option");
+                    option.value = team.toLowerCase().replace(" ", "-");
+                    option.textContent = team;
+                    teamSelect.appendChild(option);
+                });
+                teamSelectWrapper.style.display = "block"; // Show the team selection menu
+            } else {
+                teamSelectWrapper.style.display = "none"; // Hide the team selection menu if not football
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Welcome to the Homepage!</h1>
@@ -11,12 +34,22 @@
         <a href="/developerInfo.html">Click here to see the Developer info page!</a>
     </p>
     <form action="/show_sport_info" method="POST">
-        <label for="sport">What sport are you interested in?</label>
-        <select id="sport" name="sport">
+        <label for="sport">Sport:</label>
+        <select id="sport" name="sport" onchange="updateTeamOptions()">
+            <option value=""></option>
             <option value="football">football</option>
             <option value="basketball">basketball</option>
         </select>
-        <button type="submit">Submit</button>
+
+        <!-- This section will only appear when football is selected -->
+        <div id="teamSelectWrapper" style="display: none;">
+            <label for="teamSelect">Team:</label>
+            <select id="teamSelect" name="team">
+                <!-- Teams will be populated dynamically based on the sport selection -->
+            </select>
+        </div>
+
+        
     </form>
 </body>
 </html>
