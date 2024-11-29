@@ -13,10 +13,15 @@
             teamSelect.innerHTML = ""; // Clear existing options
             standingsDiv.innerHTML = ""; // Clear previous standings
 
-            if (sport === "football") {
+            if (sport === "Football") {
                 // List of football teams
+<<<<<<< HEAD
                 const teams = ["", "Arizona Cardinals", "Atlanta Falcons", "Baltimore Ravens", "Buffalo Bills", "Carolina Panthers", "Chicago Bears", "Cincinnati Bengals", "Cleveland Browns", "Dallas Cowboys", "Denver Broncos", "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Kansas City Chiefs", "Las Vegas Raiders", "Los Angeles Chargers", "Los Angeles Rams", "Miami Dolphins", "Minnesota Vikings", "New England Patriots", "New Orleans Saints", "New York Giants", "New York Jets", "Philadelphia Eagles", "Pittsburgh Steelers", "San Francisco 49ers", "Seattle Seahawks", "Tampa Bay Buccaneers", "Tennessee Titans", "Washington Commanders"];
                 
+=======
+                const teams = [" ","Arizona Cardinals", "Atlanta Falcons", "Baltimore Ravens", "Buffalo Bills", "Carolina Panthers", "Chicago Bears", "Cincinnati Bengals", "Cleveland Browns", "Dallas Cowboys", "Denver Broncos", "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Kansas City Chiefs", "Las Vegas Raiders", "Los Angeles Chargers", "Los Angeles Rams", "Miami Dolphins", "Minnesota Vikings", "New England Patriots", "New Orleans Saints", "New York Giants", "New York Jets", "Philadelphia Eagles", "Pittsburgh Steelers", "San Francisco 49ers", "Seattle Seahawks", "Tampa Bay Buccaneers", "Tennessee Titans", "Washington Commanders"
+];
+>>>>>>> 74950876e01c4806b8f55ba92f28aa3b688863c2
                 teams.forEach(team => {
                     const option = document.createElement("option");
                     option.value = team.toLowerCase().replace(" ", "-");
@@ -24,7 +29,27 @@
                     teamSelect.appendChild(option);
                 });
                 teamSelectWrapper.style.display = "block"; // Show the team selection menu
-            } else {
+            } 
+            else if(sport === "Basketball"){
+                const teams = [" ","Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets",
+                                "Chicago Bulls", "Cleveland Cavaliers", "Dallas Mavericks", "Denver Nuggets",
+                                "Detroit Pistons", "Golden State Warriors", "Houston Rockets", "Indiana Pacers",
+                                "Los Angeles Clippers", "Los Angeles Lakers", "Memphis Grizzlies", "Miami Heat",
+                                "Milwaukee Bucks", "Minnesota Timberwolves", "New Orleans Pelicans", "New York Knicks",
+                                "Oklahoma City Thunder", "Orlando Magic", "Philadelphia 76ers", "Phoenix Suns",
+                                "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors",
+                                "Utah Jazz", "Washington Wizards"
+                                 ];
+                teams.forEach(team => {
+                    const option = document.createElement("option");
+                    option.value = team.toLowerCase().replace(" ", "-");
+                    option.textContent = team;
+                    teamSelect.appendChild(option);
+                });
+                teamSelectWrapper.style.display = "block"; // Show the team selection menu
+
+            }
+            else {
                 teamSelectWrapper.style.display = "none"; // Hide the team selection menu if not football
             }
         }
@@ -66,8 +91,8 @@
         <label for="sport">Sport:</label>
         <select id="sport" name="sport" onchange="updateTeamOptions()">
             <option value=""></option>
-            <option value="football">football</option>
-            <option value="basketball">basketball</option>
+            <option value="Football">football</option>
+            <option value="Basketball">basketball</option>
         </select>
 
         <!-- This section will only appear when football is selected -->
@@ -83,4 +108,11 @@
 
    
 </body>
+    <script>
+        function team_info(){
+
+        }
+    </script>
+
+
 </html>
