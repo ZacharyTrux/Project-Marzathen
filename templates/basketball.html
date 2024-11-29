@@ -6,24 +6,20 @@
     <title>Basketball Games</title>
 </head>
 <body>
-    <h1>Basketball Games for Today</h1>
+    <h1>Basketball Games</h1>
 
     {% if games %}
         <ul>
             {% for game in games %}
                 <li>
-                    Game: {{ game.teams.home.name }} vs {{ game.teams.away.name }} <br>
-                    Date: {{ game.date }} <br>
-                    Venue: {{ game.venue.name }}, {{ game.venue.city }}
+                    <h3>{{ game.teams.home.name }} vs {{ game.teams.away.name }}</h3>
+                    <p><strong>Date:</strong> {{ game.formatted_date }}</p>
+                    <p><strong>Venue:</strong> {{ game.venue }}</p>
                 </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p>No games found for today!</p>
+        <p>No games available for the selected date.</p>
     {% endif %}
-
-    <a href="/">Go back to the homepage</a>
-    <br>
-    <a href="/secret.html">Access the secret page</a>
 </body>
 </html>
