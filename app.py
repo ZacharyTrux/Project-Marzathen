@@ -20,26 +20,30 @@ def get_standings():
     # Make API request to ESPN standings endpoint
     url = f"https://site.api.espn.com/apis/site/v2/sports/{sport}/{sport}/standings"
     
-    try:
-        response = requests.get(url)
-        data = response.json()
+    response = requests.get(url)
+    data = response.json()
         
         # Search for the specific team in the standings data
-        team_data = None
-        for conference in data['children']:
-            for team_info in conference['standings']['entries']:
-                if team_info['team']['displayName'].lower() == team.lower():
-                    team_data = team_info
-                    break
-            if team_data:
-                break
+    standings = data['children'][0]['standings']['entries']
+    for entry in standings:
+        team_name = entry['team']['name']
+            
+        if team_name.lower() == team.lower():
+                
+            stats = entry["stats"]
+            standings_data = {
+                    "gamesPlayed": next(s["value"] for s in stats if s["name"] == "gamesPlayed"),
+                    "wins": next(s["value"] for s in stats if s["name"] == "wins"),
+                    "ties": next((s["value"] for s in stats if s["name"] == "ties"), 0),  # Handle if ties are missing
+                    "losses": next(s["value"] for s in stats if s["name"] == "losses"),
+                    "pointsFor": next(s["value"] for s in stats if s["name"] == "pointsFor"),
+                    "pointsAgainst": next(s["value"] for s in stats if s["name"] == "pointsAgainst"),
+                    "pointDifferential": next(s["value"] for s in stats if s["name"] == "pointDifferential"),
+                    "points": next(s["value"] for s in stats if s["name"] == "points"),
+                }
+    return jsonify(standings_data)
+            
         
-        if team_data:
-            return jsonify(team_data)
-        else:
-            return jsonify({"error": "Team not found"}), 404
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

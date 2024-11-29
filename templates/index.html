@@ -15,13 +15,8 @@
 
             if (sport === "Football") {
                 // List of football teams
-<<<<<<< HEAD
                 const teams = ["", "Arizona Cardinals", "Atlanta Falcons", "Baltimore Ravens", "Buffalo Bills", "Carolina Panthers", "Chicago Bears", "Cincinnati Bengals", "Cleveland Browns", "Dallas Cowboys", "Denver Broncos", "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Kansas City Chiefs", "Las Vegas Raiders", "Los Angeles Chargers", "Los Angeles Rams", "Miami Dolphins", "Minnesota Vikings", "New England Patriots", "New Orleans Saints", "New York Giants", "New York Jets", "Philadelphia Eagles", "Pittsburgh Steelers", "San Francisco 49ers", "Seattle Seahawks", "Tampa Bay Buccaneers", "Tennessee Titans", "Washington Commanders"];
                 
-=======
-                const teams = [" ","Arizona Cardinals", "Atlanta Falcons", "Baltimore Ravens", "Buffalo Bills", "Carolina Panthers", "Chicago Bears", "Cincinnati Bengals", "Cleveland Browns", "Dallas Cowboys", "Denver Broncos", "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Kansas City Chiefs", "Las Vegas Raiders", "Los Angeles Chargers", "Los Angeles Rams", "Miami Dolphins", "Minnesota Vikings", "New England Patriots", "New Orleans Saints", "New York Giants", "New York Jets", "Philadelphia Eagles", "Pittsburgh Steelers", "San Francisco 49ers", "Seattle Seahawks", "Tampa Bay Buccaneers", "Tennessee Titans", "Washington Commanders"
-];
->>>>>>> 74950876e01c4806b8f55ba92f28aa3b688863c2
                 teams.forEach(team => {
                     const option = document.createElement("option");
                     option.value = team.toLowerCase().replace(" ", "-");
@@ -57,29 +52,43 @@
         function fetchStandings() {
             const sport = document.getElementById("sport").value;
             const team = document.getElementById("teamSelect").value;
-
+        
             if (!team || !sport) return;
-
+        
             const url = `/get_standings?team=${team}&sport=${sport}`;
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     const standingsDiv = document.getElementById("standings");
-                    if (data.error) {
-                        standingsDiv.innerHTML = `<p>Error: ${data.error}</p>`;
-                    } else {
+        
+                    try {
+                        // Navigate the nested structure to get the standings
+                        const entries = data.children[0].standings.entries;
+        
+                        // Find the specific team's entry
+                        const teamEntry = entries.find(entry => entry.team.displayName === team);
+        
+                        if (!teamEntry) {
+                            standingsDiv.innerHTML = `<p>No standings found for the selected team.</p>`;
+                            return;
+                        }
+        
+                        // Display the team's standings
                         standingsDiv.innerHTML = `
-                            <h3>Standings for ${data.team.displayName}:</h3>
-                            <p>Wins: ${data.stats[0].value}</p>
-                            <p>Losses: ${data.stats[1].value}</p>
-                            <p>Rank: ${data.rank}</p>
+                            <h3>Standings for ${teamEntry.team.displayName}:</h3>
+                            <p>Wins: ${teamEntry.stats[0].value}</p>
+                            <p>Losses: ${teamEntry.stats[1].value}</p>
+                            <p>Rank: ${teamEntry.rank}</p>
                         `;
+                    } catch (error) {
+                        standingsDiv.innerHTML = `<p>Error processing data: ${error.message}</p>`;
                     }
                 })
                 .catch(error => {
-                    document.getElementById("standings").innerHTML = `<p>Error: ${error}</p>`;
+                    document.getElementById("standings").innerHTML = `<p>Error fetching data: ${error.message}</p>`;
                 });
         }
+        
     </script>
 </head>
 <body>
