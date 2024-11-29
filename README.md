@@ -1,4 +1,4 @@
-# Project-Zethan
+# Project-Marzathen
 
 API made with python as backend, HTML as front end.
 

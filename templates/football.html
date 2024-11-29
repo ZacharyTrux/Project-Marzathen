@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>American Football Fixtures</title>
+</head>
+<body>
+    <h1>American Football Fixtures for Today</h1>
+    {% if fixtures %}
+        <ul>
+            {% for fixture in fixtures %}
+                <li>
+                    Match: {{ fixture.teams.away.name }} @ {{ fixture.teams.home.name }} <br>
+                    Date: {{ fixture.fixture.date }} <br>
+                    Stadium: {{ fixture.fixture.venue.name }}, {{ fixture.fixture.venue.city }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No games found for today!</p>
+    {% endif %}
+    <a href="/">Go back to the homepage</a>
+    <br>
+    <a href="/secret.html">Access the secret page</a> <!-- Link to secret.html -->
+</body>
+</html>
