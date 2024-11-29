@@ -10,10 +10,13 @@
     <p>
         <a href="/secret.html">Click here to see the secret page!</a>
     </p>
-    <form action="/show_football_info" method="POST">
+    <form action="/show_sport_info" method="POST">
         <label for="sport">What sport are you interested in?</label>
-        <input type="text" id="sport" name="sport" value="">
-        <input type="submit" value="Submit">
+        <select id="sport" name="sport">
+            <option value="football">football</option>
+            <option value="basketball">basketball</option>
+        </select>
+        <button type="submit">Submit</button>
     </form>
 </body>
 </html>
