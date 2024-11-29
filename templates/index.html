@@ -9,12 +9,14 @@
             const sport = document.getElementById("sport").value;
             const teamSelectWrapper = document.getElementById("teamSelectWrapper");
             const teamSelect = document.getElementById("teamSelect");
+            const standingsDiv = document.getElementById("standings");
             teamSelect.innerHTML = ""; // Clear existing options
+            standingsDiv.innerHTML = ""; // Clear previous standings
 
             if (sport === "football") {
                 // List of football teams
-                const teams = ["Arizona Cardinals", "Atlanta Falcons", "Baltimore Ravens", "Buffalo Bills", "Carolina Panthers", "Chicago Bears", "Cincinnati Bengals", "Cleveland Browns", "Dallas Cowboys", "Denver Broncos", "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Kansas City Chiefs", "Las Vegas Raiders", "Los Angeles Chargers", "Los Angeles Rams", "Miami Dolphins", "Minnesota Vikings", "New England Patriots", "New Orleans Saints", "New York Giants", "New York Jets", "Philadelphia Eagles", "Pittsburgh Steelers", "San Francisco 49ers", "Seattle Seahawks", "Tampa Bay Buccaneers", "Tennessee Titans", "Washington Commanders"
-];
+                const teams = ["", "Arizona Cardinals", "Atlanta Falcons", "Baltimore Ravens", "Buffalo Bills", "Carolina Panthers", "Chicago Bears", "Cincinnati Bengals", "Cleveland Browns", "Dallas Cowboys", "Denver Broncos", "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Kansas City Chiefs", "Las Vegas Raiders", "Los Angeles Chargers", "Los Angeles Rams", "Miami Dolphins", "Minnesota Vikings", "New England Patriots", "New Orleans Saints", "New York Giants", "New York Jets", "Philadelphia Eagles", "Pittsburgh Steelers", "San Francisco 49ers", "Seattle Seahawks", "Tampa Bay Buccaneers", "Tennessee Titans", "Washington Commanders"];
+                
                 teams.forEach(team => {
                     const option = document.createElement("option");
                     option.value = team.toLowerCase().replace(" ", "-");
@@ -25,6 +27,33 @@
             } else {
                 teamSelectWrapper.style.display = "none"; // Hide the team selection menu if not football
             }
+        }
+
+        function fetchStandings() {
+            const sport = document.getElementById("sport").value;
+            const team = document.getElementById("teamSelect").value;
+
+            if (!team || !sport) return;
+
+            const url = `/get_standings?team=${team}&sport=${sport}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const standingsDiv = document.getElementById("standings");
+                    if (data.error) {
+                        standingsDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+                    } else {
+                        standingsDiv.innerHTML = `
+                            <h3>Standings for ${data.team.displayName}:</h3>
+                            <p>Wins: ${data.stats[0].value}</p>
+                            <p>Losses: ${data.stats[1].value}</p>
+                            <p>Rank: ${data.rank}</p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("standings").innerHTML = `<p>Error: ${error}</p>`;
+                });
         }
     </script>
 </head>
@@ -44,12 +73,14 @@
         <!-- This section will only appear when football is selected -->
         <div id="teamSelectWrapper" style="display: none;">
             <label for="teamSelect">Team:</label>
-            <select id="teamSelect" name="team">
+            <select id="teamSelect" name="team" onchange="fetchStandings()">
                 <!-- Teams will be populated dynamically based on the sport selection -->
             </select>
         </div>
-
-        
     </form>
+
+    <div id="standings"></div> <!-- Area to display standings -->
+
+   
 </body>
 </html>
