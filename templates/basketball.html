@@ -4,22 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Basketball Games</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .game-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .game-card h2 {
+            margin: 0;
+            color: #333;
+        }
+        .game-details {
+            margin-top: 10px;
+            color: #555;
+        }
+        .teams {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 1em;
+            color: #666;
+        }
+        .game-info span {
+            font-weight: bold;
+        }
+        .no-games {
+            text-align: center;
+            color: #888;
+            font-size: 1.2em;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            text-decoration: none;
+            color: #4CAF50;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Basketball Games</h1>
+    <header>
+        <h1>Basketball Games for Today</h1>
+    </header>
 
-    {% if games %}
-        <ul>
+    <div class="container">
+        {% if games %}
             {% for game in games %}
-                <li>
-                    <h3>{{ game.teams.home.name }} vs {{ game.teams.away.name }}</h3>
-                    <p><strong>Date:</strong> {{ game.formatted_date }}</p>
-                    <p><strong>Venue:</strong> {{ game.venue }}</p>
-                </li>
+                <div class="game-card">
+                    <h2>{{ game.teams.home.name }} vs {{ game.teams.away.name }}</h2>
+                    <div class="game-details">
+                        <p class="teams">Teams: {{ game.teams.home.name }} vs {{ game.teams.away.name }}</p>
+                        <p>Date: {{ game.date }}</p>
+                        <p>Time: {{ game.time }}</p>
+                    </div>
+                    <div class="game-info">
+                        <span>Score: {{ game.scores.home }} - {{ game.scores.away }}</span>
+                        <span>Venue: {{ game.venue.name }}</span>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
-    {% else %}
-        <p>No games available for the selected date.</p>
-    {% endif %}
+        {% else %}
+            <p class="no-games">No games available for the specified date.</p>
+        {% endif %}
+    </div>
+
+    <a class="back-link" href="/">Go back to the homepage</a>
 </body>
 </html>

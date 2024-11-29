@@ -12,9 +12,9 @@ BASKETBALL_URL = "https://v1.basketball.api-sports.io/games"
 def home():
     return render_template('index.html')
 
-@app.route('/secret.html')
+@app.route('/developerInfo.html')
 def secret():
-    return render_template('secret.html')
+    return render_template('developerInfo.html')
 
 @app.route('/show_sport_info', methods=['POST'])
 def show_sport_info():
