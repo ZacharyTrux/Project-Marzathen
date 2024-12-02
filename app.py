@@ -12,38 +12,52 @@ def home():
 def secret():
     return render_template('developerInfo.html')
 
-@app.route('/get_standings', methods=['GET'])
+@app.route('/getStandings', methods=['GET'])
 def get_standings():
-    team = request.args.get('team')
-    sport = request.args.get('sport')
+    team = request.args.get('team')  # Get the team from the URL parameters
+    sport = request.args.get('sport')  # Get the sport from the URL parameters
 
-    # Make API request to ESPN standings endpoint
-    url = f"https://site.api.espn.com/apis/site/v2/sports/{sport}/{sport}/standings"
+    # Validate inputs
+    #if not team or not sport:
+        #return jsonify({"error": "Missing 'team' or 'sport' parameter"}), 400
     
-    response = requests.get(url)
-    data = response.json()
-        
-        # Search for the specific team in the standings data
-    standings = data['children'][0]['standings']['entries']
-    for entry in standings:
-        team_name = entry['team']['name']
-            
-        if team_name.lower() == team.lower():
-                
-            stats = entry["stats"]
-            standings_data = {
-                    "gamesPlayed": next(s["value"] for s in stats if s["name"] == "gamesPlayed"),
-                    "wins": next(s["value"] for s in stats if s["name"] == "wins"),
-                    "ties": next((s["value"] for s in stats if s["name"] == "ties"), 0),  # Handle if ties are missing
-                    "losses": next(s["value"] for s in stats if s["name"] == "losses"),
-                    "pointsFor": next(s["value"] for s in stats if s["name"] == "pointsFor"),
-                    "pointsAgainst": next(s["value"] for s in stats if s["name"] == "pointsAgainst"),
-                    "pointDifferential": next(s["value"] for s in stats if s["name"] == "pointDifferential"),
-                    "points": next(s["value"] for s in stats if s["name"] == "points"),
-                }
-    return jsonify(standings_data)
-            
-        
+    # Example: Fetch data from an API based on sport and team
+    # This assumes you have an external API that gives standings data
+
+    if sport.lower() == 'football':
+        # Assuming the team name needs to be formatted or replaced
+        team = team.replace("-", " ").title()
+        url = f"https://site.api.espn.com/apis/v2/sports/football/nfl/standings?season=2024"
+        try:
+            response = requests.get(url)
+            standings_data = response.json()
+
+            # Logic to filter the standings by team can be added here
+            team_data = next((team_info for team_info in standings_data['sports'][0]['leagues'][0]['standings']['entries'] if team_info['team']['displayName'].lower() == team.lower()), None)
+
+            if team_data:
+                return jsonify({
+                    "team": {
+                        "name": team_data['team']['displayName'],
+                        "abbreviation": team_data['team']['abbreviation'],
+                        "location": team_data['team']['location'],
+                        "record": {
+                        "wins": team_data['record']['wins'],
+                        "losses": team_data['record']['losses'],
+                        "winPercentage": team_data['record']['winPercentage']
+                    },
+                    "position": team_data['position']
+                    }
+                })
+            else:
+                return jsonify({"error": f"Team '{team}' not found in standings."}), 404
+
+        except requests.exceptions.RequestException as e:
+            return jsonify({"error": "Error fetching data from ESPN API", "details": str(e)}), 500
+
+    else:
+        return jsonify({"error": "Sport not supported."}), 400
+
 
 if __name__ == '__main__':
     app.run(debug=True)

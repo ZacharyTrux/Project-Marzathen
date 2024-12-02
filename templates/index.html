@@ -14,7 +14,6 @@
             standingsDiv.innerHTML = ""; // Clear previous standings
 
             if (sport === "Football") {
-                // List of football teams
                 const teams = ["", "Arizona Cardinals", "Atlanta Falcons", "Baltimore Ravens", "Buffalo Bills", "Carolina Panthers", "Chicago Bears", "Cincinnati Bengals", "Cleveland Browns", "Dallas Cowboys", "Denver Broncos", "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Kansas City Chiefs", "Las Vegas Raiders", "Los Angeles Chargers", "Los Angeles Rams", "Miami Dolphins", "Minnesota Vikings", "New England Patriots", "New Orleans Saints", "New York Giants", "New York Jets", "Philadelphia Eagles", "Pittsburgh Steelers", "San Francisco 49ers", "Seattle Seahawks", "Tampa Bay Buccaneers", "Tennessee Titans", "Washington Commanders"];
                 
                 teams.forEach(team => {
@@ -49,46 +48,60 @@
             }
         }
 
-        function fetchStandings() {
-            const sport = document.getElementById("sport").value;
-            const team = document.getElementById("teamSelect").value;
+        function addButton(){
+            const submitButton = document.getElementById("submitButton");
+            if (!submitButton) {
+                const button = document.createElement("button");
+                button.id = "submitButton";
+                button.textContent = "Submit";
+                button.type = "button"; // Prevent form submission on click
+                button.onclick = getStandings; // Trigger getStandings function
+                document.getElementById("teamSelectWrapper").appendChild(button); // Append button to the wrapper
+            }
+        }
+
+        function getStandings(event) {
+            event.preventDefault(); // Prevent form from submitting traditionally
+
+            const teamSelected = document.getElementById('teamSelect');
+            const sportSelected = document.getElementById('sport');
+            
+            // Ensure the team and sport are selected
+            if (!teamSelected.value || !sportSelected.value) {
+                alert("Please provide both team and sport.");
+                return;
+            }
+
+            const team = teamSelected.value;  
+            const sport = sportSelected.value; 
         
-            if (!team || !sport) return;
+            // Build the request URL
+            const url = `/getStandings?team=${team}&sport=${sport}`;
         
-            const url = `/get_standings?team=${team}&sport=${sport}`;
+            // Fetch data from the Flask backend
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    const standingsDiv = document.getElementById("standings");
+                    if (data.error) {
+                        document.getElementById('standings').innerHTML = `<p>Error: ${data.error}</p>`;
+                    } else {
+                        const teamName = data.team.name;
+                        const wins = data.team.record.wins;
+                        const losses = data.team.record.losses;
+                        const position = data.team.position;
         
-                    try {
-                        // Navigate the nested structure to get the standings
-                        const entries = data.children[0].standings.entries;
-        
-                        // Find the specific team's entry
-                        const teamEntry = entries.find(entry => entry.team.displayName === team);
-        
-                        if (!teamEntry) {
-                            standingsDiv.innerHTML = `<p>No standings found for the selected team.</p>`;
-                            return;
-                        }
-        
-                        // Display the team's standings
-                        standingsDiv.innerHTML = `
-                            <h3>Standings for ${teamEntry.team.displayName}:</h3>
-                            <p>Wins: ${teamEntry.stats[0].value}</p>
-                            <p>Losses: ${teamEntry.stats[1].value}</p>
-                            <p>Rank: ${teamEntry.rank}</p>
-                        `;
-                    } catch (error) {
-                        standingsDiv.innerHTML = `<p>Error processing data: ${error.message}</p>`;
+                        // Display the standings
+                        document.getElementById('standings').innerHTML = 
+                        `<p><strong>Team:</strong> ${teamName}</p>
+                        <p><strong>Record:</strong> ${wins} Wins, ${losses} Losses</p>
+                        <p><strong>Position:</strong> ${position}</p>`;
                     }
                 })
                 .catch(error => {
-                    document.getElementById("standings").innerHTML = `<p>Error fetching data: ${error.message}</p>`;
+                    console.error("Error fetching data:", error);
+                    document.getElementById('standings').innerHTML = '<p>Error fetching data from server.</p>';
                 });
         }
-        
     </script>
 </head>
 <body>
@@ -96,7 +109,7 @@
     <p>
         <a href="/developerInfo.html">Click here to see the Developer info page!</a>
     </p>
-    <form action="/show_sport_info" method="POST">
+    <form id="myForm">
         <label for="sport">Sport:</label>
         <select id="sport" name="sport" onchange="updateTeamOptions()">
             <option value=""></option>
@@ -104,24 +117,16 @@
             <option value="Basketball">basketball</option>
         </select>
 
-        <!-- This section will only appear when football is selected -->
         <div id="teamSelectWrapper" style="display: none;">
             <label for="teamSelect">Team:</label>
-            <select id="teamSelect" name="team" onchange="fetchStandings()">
+            <select id="teamSelect" name="team" onchange="addButton()">
                 <!-- Teams will be populated dynamically based on the sport selection -->
             </select>
         </div>
+        <br />
+
     </form>
 
     <div id="standings"></div> <!-- Area to display standings -->
-
-   
 </body>
-    <script>
-        function team_info(){
-
-        }
-    </script>
-
-
 </html>
