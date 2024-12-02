@@ -31,7 +31,7 @@ team_codes = {
 def get_standings():
     team = request.args.get('team')
     sport = request.args.get('sport')
-
+    
     if not team or not sport:
         return jsonify({"error": "Missing team or sport parameters"}), 400
 
@@ -49,6 +49,6 @@ def get_standings():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
+    
 if __name__ == '__main__':
     app.run(debug=True)
